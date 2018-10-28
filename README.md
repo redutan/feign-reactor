@@ -28,6 +28,8 @@ Netflix 에서 만든 선언적 WebClient
 
 ## API
 
+스프링부트 애플리케이션을 기동 후
+
 ### 1개 조회 
 * http://localhost:8080/httpbin
 
