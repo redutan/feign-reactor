@@ -1,27 +1,27 @@
 package com.example.feignreactor.application;
 
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class HttpbinResponse {
-    private String origin;
-    private String url;
+    static final HttpbinResponse EMPTY = new HttpbinResponse("", "");
+    private final String origin;
+    private final String url;
 
-    public HttpbinResponse() {
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
+    @JsonCreator
+    public HttpbinResponse(@JsonProperty("origin") String origin,
+                           @JsonProperty("url") String url) {
         this.origin = origin;
+        this.url = url;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public String getOrigin() {
+        return origin;
     }
 
     @Override

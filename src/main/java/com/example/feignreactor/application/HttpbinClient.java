@@ -1,6 +1,8 @@
 package com.example.feignreactor.application;
 
 import feign.hystrix.FallbackFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +16,18 @@ public interface HttpbinClient {
 
     @GetMapping("/delay/{delay}")
     HttpbinResponse delay(@PathVariable("delay") int delay);
+
+    @GetMapping("/status/{code}")
+    HttpbinResponse status(@PathVariable("code") int code);
 }
 
 @Component
 class HttpbinClientFallbackFactory implements FallbackFactory<HttpbinClient> {
+    private final Logger log = LoggerFactory.getLogger(HttpbinClientFallbackFactory.class);
 
     @SuppressWarnings("Convert2Lambda")
     @Override
-    public HttpbinClient create(Throwable throwable) {
+    public HttpbinClient create(Throwable cause) {
         return new HttpbinClient() {
 
             @Override
@@ -32,6 +38,12 @@ class HttpbinClientFallbackFactory implements FallbackFactory<HttpbinClient> {
             @Override
             public HttpbinResponse delay(int delay) {
                 return null;
+            }
+
+            @Override
+            public HttpbinResponse status(int code) {
+                log.error("Error status : {}", code, cause);
+                return HttpbinResponse.EMPTY;
             }
         };
     }

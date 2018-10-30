@@ -26,18 +26,37 @@ Netflix 에서 만든 선언적 WebClient
 * 각 API는 4초 지연됨. 하지만 병렬적으로 호출하므로 4~5초 사이에 처리완료
 * 개인적으로 아직까지는 전 영역에서 반응형을 할 필요는 없다고 판단하고 있으며, 특정 호출 부분에도 동기화로 인한 Blocking 지연을 최소화하는 방식으로 구성할 예정
 
-## API
+## UseCase
 
 스프링부트 애플리케이션을 기동 후
 
-### 1개 조회 
+### 1개 조회
+ 
 * http://localhost:8080/httpbin
 
-### 5개 조회
+### 5개 병렬 조회 (Reactor)
 
 * http://localhost:8080/httpbin/5x4
 * 5개를 한 번에 조회 하는데 4초 간 지연이 있음. 하지만 Reactor를 이용 병렬로 조회하므로 거의 4~5초 사이에 조회 완료
 
+### 실패 후 fallback
 
+* http://localhost:8080/httpbin/feign/fallback
+* feign + fallback
+
+### 실패 후 fallback2
+
+* http://localhost:8080/httpbin/hystrix/fallback
+* `@HystrixCommand`
+
+### 실패 후 예외 
+
+* http://localhost:8080/httpbin/exception
+* 조회 실패 후 바로 예외 반환
+
+### 재시도 후 조회 성공
+
+* http://localhost:8080/httpbin/retry
+* `feign.Retryer` 를 통해서 내부적으로 2번째 조회 성공
 
 
